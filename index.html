@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Clock</title>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        body{
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #b5c8d7;
+        }
+        .clock{
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background-color: #c3cdd6;
+            /* border-radius: 25px; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 30px 30px 30px -15px rgba(0,0,0,.15),inset 15px 15px 10px rgba(255,255,255,.25),-15px -15px 35px rgba(255,255,255,.15),inset -15px -15px 10px rgba(0,0,0,.05);
+        }
+        .clock::before{
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #e91e63;
+            border-radius: 50%;
+            z-index: 1000;
+            box-shadow: 0 0 0 1px #e91e63 ,0 0 0 3px #fff, 0 0 5px 5px rgba(0,0,0,0.15);
+        }
+        .clock .number{
+            position: absolute;
+            inset: 25px;
+            background-color: #143c64;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 30px 30px 30px -15px rgba(0,0,0,.25),inset 15px 15px 10px rgba(255,255,255,.15),-15px -15px 35px rgba(255,255,255,.55),inset -15px -15px 10px rgba(0,0,0,.15);
+        }
+        .clock .number::before{
+            content: '';
+            position: absolute;
+            inset: 35px;
+            background: linear-gradient(#00eaff,#f542ef,yellow);
+            border-radius: 50%;
+            animation: animate 2s linear infinite;
+        }
+        @keyframes animate{
+            0%{
+                transform: rotate(360deg);
+            }
+            100%{
+                transform: rotate(0deg);
+            }
+        }
+        .clock .number::after{
+            content: '';
+            position: absolute;
+            inset: 38px;
+            background-color: #143c64;
+            border-radius: 50%;
+        }
+        .clock .number span{
+            position: absolute;
+            inset: 5px;
+            transform: rotate(calc(30deg * var(--i)));
+            text-align: center;
+            color: white;
+        }
+        .clock .number span b{
+            display: inline-block;
+            transform: rotate(calc(-30deg * var(--i)));
+            font-size: 1.2em;
+        }
+        .clock .number .circle{
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+        .clock .number .circle i{
+            position: absolute;
+            width: 3px;
+            height: 50%;
+            background-color: white;
+            transform-origin: bottom;
+            transform: scaleY(0.55);
+        }
+        .clock .number .circle#hour i{
+            transform: scaleY(0.3);
+            width: 4px;
+            border-radius: 50px;
+            box-shadow: 0px 20px 0px #ffffff;
+        }
+        .clock .number .circle#min i{
+            transform: scaleY(0.45);
+            border-radius: 50px;
+            box-shadow: 0px 25px 0px #ffffff;
+        }
+        .clock .number .circle#sec i{
+            transform: scaleY(0.55);
+            width: 2px;
+            background-color: #e91e63;
+            box-shadow: 0px 30px 0px #e91e63;
+            border-radius: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock">
+        <div class="number">
+            <span style="--i:0;"><b>12</b></span>
+            <span style="--i:1;"><b>1</b></span>
+            <span style="--i:2;"><b>2</b></span>
+            <span style="--i:3;"><b>3</b></span>
+            <span style="--i:4;"><b>4</b></span>
+            <span style="--i:5;"><b>5</b></span>
+            <span style="--i:6;"><b>6</b></span>
+            <span style="--i:7;"><b>7</b></span>
+            <span style="--i:8;"><b>8</b></span>
+            <span style="--i:9;"><b>9</b></span>
+            <span style="--i:10;"><b>10</b></span>
+            <span style="--i:11;"><b>11</b></span>
+
+            <div class="circle" id="hour"><i></i></div>
+            <div class="circle" id="min"><i></i></div>
+            <div class="circle" id="sec"><i></i></div>
+
+        </div>
+    </div>
+
+    <script>
+        let hour=document.querySelector('#hour');
+        let min=document.querySelector('#min');
+        let sec=document.querySelector('#sec');
+        let digital=document.querySelector(".digital");
+
+        let dsc=document.querySelector(".seconds");
+        let dmn=document.querySelector(".minutes");
+        let dhr=document.querySelector(".hours");
+
+        let am_pm=document.querySelector(".am-pm");
+
+        let date_box=document.querySelector(".date-box");
+        let date_day=document.querySelector(".date-day");
+        let fulldate=document.querySelector(".fulldate");
+
+        let day_Day=["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+        let month=["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+
+        setInterval(()=>{
+            let day=new Date();
+            let hh=day.getHours()*30;
+            let mm=day.getMinutes()*6;
+            let sc=day.getSeconds()*6;
+
+            hour.style.transform = `rotateZ(${hh+(mm/12)}deg)`;
+            min.style.transform=`rotateZ(${mm}deg)`;
+            sec.style.transform=`rotateZ(${sc}deg)`;
+            
+            let getSecond=day.getSeconds();
+            if(getSecond<10) dsc.innerHTML="0"+getSecond;
+            else dsc.innerHTML=getSecond;
+
+            let getMinute=day.getMinutes();
+            if(getMinute<10) dmn.innerHTML="0"+getMinute;
+            else dmn.innerHTML=getMinute;
+
+            let getHour=day.getHours();
+            if(getHour<=12){
+                if(getHour<10) dhr.innerHTML="0"+getHour;
+                else dhr.innerHTML=getHour;
+            }
+            else{
+                if((getHour-12)<10) dhr.innerHTML="0"+(getHour-12);
+                else dhr.innerHTML=getHour-12;
+            }
+
+            if(getHour<12) am_pm.innerHTML="AM";
+            else am_pm.innerHTML="PM";
+
+            date_day.innerHTML=day_Day[day.getDay()];
+            fulldate.innerHTML=day.getDate()+"  "+month[day.getMonth()]+"  "+day.getFullYear();
+        })
+    </script>
+
+</body>
+</html>
